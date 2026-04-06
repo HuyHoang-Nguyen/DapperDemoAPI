@@ -1,8 +1,5 @@
 ﻿using DapperDemoAPI.Enums.EnumError;
-using DapperDemoAPI.IRepositories;
 using DapperDemoAPI.Models.Employee;
-using FluentValidation;
-using System;
 
 namespace DapperDemoAPI.Validators.Employees
 {
@@ -12,11 +9,11 @@ namespace DapperDemoAPI.Validators.Employees
             {
                 var errors = new List<EnumEmployeeValidationError>();
 
-                if (!string.IsNullOrWhiteSpace(fullName) == false)
+                if (string.IsNullOrWhiteSpace(fullName))
                 {
                     errors.Add(EnumEmployeeValidationError.NameRequired);
                 }
-                if (!string.IsNullOrWhiteSpace(email) == false)
+                if (string.IsNullOrWhiteSpace(email))
                 {
                     errors.Add(EnumEmployeeValidationError.EmailRequired);
                 }
@@ -28,56 +25,42 @@ namespace DapperDemoAPI.Validators.Employees
                 {
                     errors.Add(EnumEmployeeValidationError.PhoneInvalid);
                 }
-                if (hireDate.HasValue && hireDate.Value > DateOnly.FromDateTime(DateTime.Today))
+                if (hireDate.HasValue && hireDate.Value >= DateOnly.FromDateTime(DateTime.Today))
                 {
                     errors.Add(EnumEmployeeValidationError.HireDateInvalid);
                 }
-                if (baseSalary.HasValue && baseSalary.Value < 0)
+                if (baseSalary.HasValue && baseSalary.Value <= 0)
                 {
                     errors.Add(EnumEmployeeValidationError.SalaryInvalid);
                 }
                 return errors;
             }
-            public static async Task<List<EnumEmployeeValidationError>> ValidateCreateAsync(EmployeeModel emp, IEmployeeRepository repo)
+            public static List<EnumEmployeeValidationError> ValidateCreate(EmployeeModel emp)
             {
-                var errors = ValidateCommon(emp.FullName, emp.Email, emp.Phone, emp.HireDate, emp.BaseSalary);
-                if (string.IsNullOrWhiteSpace(emp.FullName))
-                {
-                    errors.Add(EnumEmployeeValidationError.NameRequired);
-                }
-                if (string.IsNullOrWhiteSpace(emp.Email))
-                {
-                    errors.Add(EnumEmployeeValidationError.EmailRequired);
-                }
-                if (!errors.Any())
-                {
-                    if (await repo.EmailExistAsync(emp.Email))
-                    {
-                        errors.Add(EnumEmployeeValidationError.EmailExisted);
-                    }
-                }
-                return errors;
+                return ValidateCommon(emp.FullName, emp.Email, emp.Phone, emp.HireDate, emp.BaseSalary);
             }
-            public static List<EnumEmployeeValidationError> ValidateUpdate(UpdateEmployeeModel e)
+            public static List<EnumEmployeeValidationError> ValidateUpdate(UpdateEmployeeModel emp)
             {
                 var errors = new List<EnumEmployeeValidationError>();
-
-                if (e.FullName != null && string.IsNullOrWhiteSpace(e.FullName))
+                if (emp.FullName != null)
                 {
-                    errors.Add(EnumEmployeeValidationError.NameRequired);
+                    if (string.IsNullOrWhiteSpace(emp.FullName))
+                    {
+                        errors.Add(EnumEmployeeValidationError.NameRequired);
+                    }
                 }
-                if (e.Phone != null)
+                if (emp.Phone != null)
                 {
-                    if (string.IsNullOrWhiteSpace(e.Phone) || e.Phone.Length > 11)
+                    if (string.IsNullOrWhiteSpace(emp.Phone) || emp.Phone.Length > 11)
                     {
                         errors.Add(EnumEmployeeValidationError.PhoneInvalid);
                     }
                 }
-                if (e.DepartmentId.HasValue && e.DepartmentId <= 0)
+                if (emp.DepartmentId.HasValue && emp.DepartmentId <= 0)
                 {
                     errors.Add(EnumEmployeeValidationError.DepartmentInvalid);
                 }
-                if (e.BaseSalary.HasValue && e.BaseSalary < 0)
+                if (emp.BaseSalary.HasValue && emp.BaseSalary < 0)
                 {
                     errors.Add(EnumEmployeeValidationError.SalaryInvalid);
                 }

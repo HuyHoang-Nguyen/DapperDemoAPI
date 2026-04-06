@@ -4,9 +4,7 @@ using DapperDemoAPI.IRepositories;
 using DapperDemoAPI.Models.Employee;
 using DapperDemoAPI.QueryModels;
 using Microsoft.Data.SqlClient;
-using System.ComponentModel;
 using System.Data;
-using System.Runtime.InteropServices;
 
 
 namespace DapperDemoAPI.Repositories
@@ -119,7 +117,8 @@ namespace DapperDemoAPI.Repositories
             using var connection = new SqlConnection(_connectionString);
             var sql = "update Employees " +
                 "      set IsDeleted = 1 " +
-                "      where Id = @Id ";
+                "      where Id = @Id " +
+                "      and IsDeleted = 0; ";
             return await connection.ExecuteAsync(sql, new {Id = id});
         }
         public async Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year)

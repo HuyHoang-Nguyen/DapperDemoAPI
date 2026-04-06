@@ -2,13 +2,12 @@
 using DapperDemoAPI.Models.Employee;
 using DapperDemoAPI.QueryModels;
 
-namespace DapperDemoAPI.IRepositories
+namespace DapperDemoAPI.Services.Interfaces
 {
-    public interface IEmployeeRepository
+    public interface IEmployeeService
     {
         Task<IEnumerable<GetTopSalaryQueryModel>> GetTopAsync(int topN);
         Task<int> CreateAsync(EmployeeModel emp);
-        Task<bool> EmailExistAsync(string email);
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee?> GetByIdAsync(int id);
         Task<int> UpdateAsync(int id, UpdateEmployeeModel emp);
@@ -16,3 +15,4 @@ namespace DapperDemoAPI.IRepositories
         Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year);
     }
 }
+

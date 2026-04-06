@@ -1,7 +1,7 @@
 using DapperDemoAPI.IRepositories;
 using DapperDemoAPI.Repositories;
-using DapperDemoAPI.Validators.Employees;
-using FluentValidation;
+using DapperDemoAPI.Services;
+using DapperDemoAPI.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -15,8 +15,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<IPayrollRepository, PayrollRepository>();
-builder.Services.AddScoped<IAttendanceRepository, AttendanceRepository>();
 
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 var app = builder.Build();
 

@@ -10,6 +10,7 @@
         HireDateInvalid,
         SalaryInvalid,
         DepartmentNotExist,
-        DepartmentInvalid
+        DepartmentInvalid,
+        EmployeeNotExisted
     }
 }

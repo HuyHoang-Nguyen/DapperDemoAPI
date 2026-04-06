@@ -1,5 +1,4 @@
 ﻿using DapperDemoAPI.Entities;
-using DapperDemoAPI.Models;
 
 namespace DapperDemoAPI.IRepositories
 {
@@ -11,5 +10,6 @@ namespace DapperDemoAPI.IRepositories
         Task<int> UpdateAsync(Department dpm);
         Task<int> DeleteAsync(int id);
         Task<IEnumerable<Department?>> GetEmptyDepartmentAsync();
+        Task<bool> ExistAsync(int id);
     }
 }

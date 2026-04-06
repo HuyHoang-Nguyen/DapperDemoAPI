@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using DapperDemoAPI.Entities;
 using DapperDemoAPI.IRepositories;
-using DapperDemoAPI.Models;
 using Microsoft.Data.SqlClient;
 
 namespace DapperDemoAPI.Repositories
@@ -13,6 +12,15 @@ namespace DapperDemoAPI.Repositories
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new ArgumentNullException("Connection missing");
+        }
+        public async Task<bool> ExistAsync(int id)
+        {
+            using var connection = new SqlConnection(_connectionString);
+                        var sql = "select case when exists " +
+                "            (select 1 from Departments where Id = @Id and IsDeleted = 0) " +
+                "            then cast (1 as bit) else cast (0 as bit) " +
+                "            end";
+            return await connection.ExecuteScalarAsync<bool>(sql, new { Id = id }); 
         }
         public async Task<IEnumerable<Department>> GetAllAsync()
         {
@@ -37,13 +45,13 @@ namespace DapperDemoAPI.Repositories
             using var connection = new SqlConnection(_connectionString);
             var sql = @"update Departments " +
                       "set Name = @Name " +
-                      "where Id = @Id and IsDeleted = 0";
+                      "where Id = @Id and IsDeleted = 0; ";
             return await connection.ExecuteAsync(sql, dpm);
         }
         public async Task<int> DeleteAsync(int id)
         {
             using var connection = new SqlConnection(_connectionString);
-            var sql = @"update Departments set IsDeleted = 1 where Id = @Id";
+            var sql = @"update Departments set IsDeleted = 1 where Id = @Id and IsDeleted = 0; ";
             return await connection.ExecuteAsync(sql, new {Id=id});
         }
         public async Task<IEnumerable<Department?>> GetEmptyDepartmentAsync()
