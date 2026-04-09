@@ -55,8 +55,6 @@ namespace DapperDemoAPI.Controllers
             var id = await _departmentRepository.CreateAsync(department);
             return Ok(id);
         }
-
-
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, PutDepartmentModel dpmm)
         {

@@ -6,6 +6,7 @@ namespace DapperDemoAPI.Models.Employee
     {
         [MaxLength(100)]
         public string? FullName { get; set; }
+        [MaxLength(12)]
         public string? Phone { get; set; }
         public int? DepartmentId { get; set; }
         public decimal? BaseSalary { get; set; }

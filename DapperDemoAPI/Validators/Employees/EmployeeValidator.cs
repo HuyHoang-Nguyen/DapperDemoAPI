@@ -29,7 +29,7 @@ namespace DapperDemoAPI.Validators.Employees
                 {
                     errors.Add(EnumEmployeeValidationError.HireDateInvalid);
                 }
-                if (baseSalary.HasValue && baseSalary.Value <= 0)
+                if (baseSalary.HasValue && baseSalary.Value < 0)
                 {
                     errors.Add(EnumEmployeeValidationError.SalaryInvalid);
                 }

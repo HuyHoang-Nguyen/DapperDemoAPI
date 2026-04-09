@@ -15,7 +15,7 @@ namespace DapperDemoAPI.Models.Employee
         public DateOnly HireDate { get; set; }
 
         [Required]
-        public int? DepartmentId { get; set; }
+        public int DepartmentId { get; set; }
 
         [Required]
         public decimal BaseSalary { get; set; }

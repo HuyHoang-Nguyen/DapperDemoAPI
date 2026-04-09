@@ -3,23 +3,19 @@ using DapperDemoAPI.Entities;
 using DapperDemoAPI.IRepositories;
 using DapperDemoAPI.Models.Employee;
 using DapperDemoAPI.QueryModels;
-using Microsoft.Data.SqlClient;
 using System.Data;
 
 
 namespace DapperDemoAPI.Repositories
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : BaseRepository, IEmployeeRepository
     {
-        private readonly string _connectionString;
-        public EmployeeRepository(IConfiguration configuration)
-        {
-            _connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? throw new ArgumentNullException(nameof(configuration));
+        public EmployeeRepository(IConfiguration configuration) : base(configuration)
+        {   
         }
         public async Task<bool> EmailExistAsync(string email)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = "select case when exists " +
                 "            (select 1 from Employees where Email = @Email) " +
                 "            then cast (1 as bit) else cast (0 as bit) " +
@@ -28,7 +24,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<IEnumerable<GetTopSalaryQueryModel>> GetTopAsync(int topN)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = @"select top (@N) 
                             Id, FullName, BaseSalary 
                         from Employees 
@@ -38,7 +34,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<int> CreateAsync(EmployeeModel emp)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = "insert into Employees(FullName, Email, Phone, HireDate, DepartmentId, BaseSalary) " +
                 "      output inserted.Id " +
                 "      values(@FullName, @Email, @Phone, @HireDate, @DepartmentId, @BaseSalary) ";
@@ -56,7 +52,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<IEnumerable<Employee>> GetAllAsync()
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = "select * from Employees where IsDeleted = 0 ";
             var employees = await connection.QueryAsync<GetEmployeeQuery>(sql);
 
@@ -74,7 +70,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<Employee?> GetByIdAsync(int id)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = "select * from Employees where IsDeleted = 0 and Id = @Id ";
             var e = await connection.QueryFirstOrDefaultAsync<GetEmployeeQuery?>(sql, new { Id = id });
 
@@ -96,7 +92,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<int> UpdateAsync(int id, UpdateEmployeeModel emp)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = "update Employees " +
                 "      set FullName = coalesce(@FullName, FullName), " +
                 "      Phone = coalesce(@Phone, Phone), " +
@@ -114,7 +110,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<int> DeleteAsync(int id)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var sql = "update Employees " +
                 "      set IsDeleted = 1 " +
                 "      where Id = @Id " +
@@ -123,7 +119,7 @@ namespace DapperDemoAPI.Repositories
         }
         public async Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year)
         {
-            using var connection = new SqlConnection(_connectionString);
+            using var connection = CreateConnection();
             var query = await connection.QueryAsync<NewHireQueryModel>("sp_Report_NewEmployeesByMonth", new { year = year }, commandType: CommandType.StoredProcedure);
             return query.ToList();
         }

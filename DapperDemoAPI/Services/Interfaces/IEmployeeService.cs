@@ -1,4 +1,5 @@
-﻿using DapperDemoAPI.Entities;
+﻿using DapperDemoAPI.Common.Results;
+using DapperDemoAPI.Entities;
 using DapperDemoAPI.Models.Employee;
 using DapperDemoAPI.QueryModels;
 
@@ -10,7 +11,7 @@ namespace DapperDemoAPI.Services.Interfaces
         Task<int> CreateAsync(EmployeeModel emp);
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee?> GetByIdAsync(int id);
-        Task<int> UpdateAsync(int id, UpdateEmployeeModel emp);
+        Task<MethodResult<int>> UpdateAsync(int id, UpdateEmployeeModel emp);
         Task<int> DeleteAsync(int id);
         Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year);
     }
