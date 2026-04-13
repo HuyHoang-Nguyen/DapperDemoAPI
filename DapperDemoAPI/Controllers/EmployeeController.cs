@@ -20,14 +20,6 @@ namespace DapperDemoAPI.Controllers
             var result = await _employeeService.GetTopAsync(n);
             return Ok(result);
         }
-        //Standard
-
-        //[HttpPost]
-        //public async Task<IActionResult> Create(EmployeeModel emp)
-        //{
-        //    var id = await _employeeService.CreateAsync(emp);
-        //    return Ok(id);
-        //}
         //MethodResult
 
         //[HttpPost]
@@ -55,17 +47,19 @@ namespace DapperDemoAPI.Controllers
             var result = await _employeeService.GetByIdAsync(id);
             return Ok(result);
         }
+
         //[HttpPut("{id}")]
-        //public async Task<IActionResult> Update(int id, UpdateEmployeeModel empm)
+        //public async Task<IActionResult> Update(int id, UpdateEmployeeModel emp)
         //{
-        //    await _employeeService.UpdateAsync(id, empm);
-        //    return NoContent();
+        //    var result = await _employeeService.UpdateAsync(id, emp);
+        //    return result.GetActionResult();
         //}
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, UpdateEmployeeModel emp)
         {
-            var result = await _employeeService.UpdateAsync(id, emp);
-            return result.GetActionResult();
+            await _employeeService.UpdateAsync(id, emp);
+            return NoContent();
         }
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

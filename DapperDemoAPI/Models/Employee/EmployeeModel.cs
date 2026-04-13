@@ -10,7 +10,7 @@ namespace DapperDemoAPI.Models.Employee
         [Required, EmailAddress]
         public string? Email { get; set; }
 
-        [MaxLength(12)]
+        [Required, MaxLength(12)]
         public string? Phone { get; set; } 
         public DateOnly HireDate { get; set; }
 

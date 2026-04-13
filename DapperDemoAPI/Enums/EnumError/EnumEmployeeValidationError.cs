@@ -3,6 +3,7 @@
     public enum EnumEmployeeValidationError
     {
         NameRequired,
+        NameLenghtInvalid,
         EmailRequired,
         EmailInvalid,
         EmailExisted,

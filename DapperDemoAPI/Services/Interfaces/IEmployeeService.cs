@@ -11,7 +11,7 @@ namespace DapperDemoAPI.Services.Interfaces
         Task<int> CreateAsync(EmployeeModel emp);
         Task<IEnumerable<Employee>> GetAllAsync();
         Task<Employee?> GetByIdAsync(int id);
-        Task<MethodResult<int>> UpdateAsync(int id, UpdateEmployeeModel emp);
+        Task<int> UpdateAsync(int id, UpdateEmployeeModel emp);
         Task<int> DeleteAsync(int id);
         Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year);
     }

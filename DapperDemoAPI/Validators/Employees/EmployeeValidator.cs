@@ -21,7 +21,7 @@ namespace DapperDemoAPI.Validators.Employees
                 {
                     errors.Add(EnumEmployeeValidationError.EmailInvalid);
                 }
-                if (!string.IsNullOrWhiteSpace(phone) && phone.Length > 11)
+                if (!string.IsNullOrWhiteSpace(phone) && phone.Length > 12)
                 {
                     errors.Add(EnumEmployeeValidationError.PhoneInvalid);
                 }
@@ -29,7 +29,7 @@ namespace DapperDemoAPI.Validators.Employees
                 {
                     errors.Add(EnumEmployeeValidationError.HireDateInvalid);
                 }
-                if (baseSalary.HasValue && baseSalary.Value < 0)
+                if (baseSalary.HasValue && baseSalary.Value <= 0)
                 {
                     errors.Add(EnumEmployeeValidationError.SalaryInvalid);
                 }
@@ -56,11 +56,7 @@ namespace DapperDemoAPI.Validators.Employees
                         errors.Add(EnumEmployeeValidationError.PhoneInvalid);
                     }
                 }
-                if (emp.DepartmentId.HasValue && emp.DepartmentId <= 0)
-                {
-                    errors.Add(EnumEmployeeValidationError.DepartmentInvalid);
-                }
-                if (emp.BaseSalary.HasValue && emp.BaseSalary < 0)
+                if (emp.BaseSalary.HasValue && emp.BaseSalary <= 0)
                 {
                     errors.Add(EnumEmployeeValidationError.SalaryInvalid);
                 }

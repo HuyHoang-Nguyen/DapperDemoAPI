@@ -20,32 +20,6 @@ namespace DapperDemoAPI.Services
             _employeeRepository = employeeRepository;
             _departmentRepository = departmentRepository;
         }
-        //Standard
-
-        //public async Task<int> CreateAsync(EmployeeModel emp)
-        //{
-        //    var errors = new List<EnumEmployeeValidationError>();
-        //    errors.AddRange(EmployeeValidator.ValidateCreate(emp));
-
-        //    if (!string.IsNullOrEmpty(emp.Email) && await _employeeRepository.EmailExistAsync(emp.Email))
-        //    {
-        //        errors.Add(EnumEmployeeValidationError.EmailExisted);
-        //    }
-        //    if (emp.DepartmentId.HasValue)
-        //    {
-        //        var exists = await _departmentRepository.ExistAsync(emp.DepartmentId.Value);
-
-        //        if (!exists)
-        //        {
-        //            errors.Add(EnumEmployeeValidationError.DepartmentNotExist);
-        //        }
-        //    }
-        //    if (errors.Any())
-        //    {
-        //        throw new Exception(string.Join(", ", errors));
-        //    }
-        //    return await _employeeRepository.CreateAsync(emp);
-        //}
 
         //MethodResult
 
@@ -78,7 +52,7 @@ namespace DapperDemoAPI.Services
         //    return result;
         //}
 
-        //Middleware Exveption
+        //Middleware Exception
 
         public async Task<int> CreateAsync(EmployeeModel emp)
         {
@@ -105,6 +79,13 @@ namespace DapperDemoAPI.Services
 
         public async Task<IEnumerable<GetTopSalaryQueryModel>> GetTopAsync(int topN)
         {
+            if (topN <= 0)
+            {
+                throw new ValidationException(new List<string>
+                {
+                    "Top must be greater than 0"
+                });
+            }
             return await _employeeRepository.GetTopAsync(topN);
         }
         public async Task<IEnumerable<Employee>> GetAllAsync()
@@ -113,67 +94,100 @@ namespace DapperDemoAPI.Services
         }
         public async Task<Employee?> GetByIdAsync(int id)
         {
-            return await _employeeRepository.GetByIdAsync(id);
-        }
-        //public async Task<int> UpdateAsync(int id, UpdateEmployeeModel emp)
-        //{
-        //    var errors = EmployeeValidator.ValidateUpdate(emp);
+            var emp = await _employeeRepository.GetByIdAsync(id);
 
+            if (emp == null)
+            {
+                throw new ValidationException(new List<string>
+                {
+                    EnumEmployeeValidationError.EmployeeNotExisted.ToString()
+                });
+            }
+            return emp;
+        }
+        //MethodResult
+        //public async Task<MethodResult<int>> UpdateAsync(int id, UpdateEmployeeModel emp)
+        //{
+        //    var result = new MethodResult<int>();
+
+        //    var validateErrors = EmployeeValidator.ValidateUpdate(emp);
+        //     foreach (var error in validateErrors)
+        //    {
+        //        result.AddError(error.ToString());
+        //    }
         //    var exists = await _employeeRepository.GetByIdAsync(id);
         //    if (exists == null)
         //    {
-        //        errors.Add(EnumEmployeeValidationError.EmployeeNotExisted);
+        //        result.AddError("EmployeeNotExisted", "Id", id);
         //    }
-        //    if (errors.Any())
+        //    if (emp.DepartmentId.HasValue)
         //    {
-        //        throw new Exception(string.Join(", ", errors));
+        //        var departmentCheck = await _departmentRepository.ExistAsync(emp.DepartmentId.Value);
+        //        if (!departmentCheck)
+        //        {
+        //            result.AddError("DepartmentNotExisted", "DepartmentId", emp.DepartmentId);
+        //        }
         //    }
-        //    return await _employeeRepository.UpdateAsync(id, emp);
-        //}
-        public async Task<MethodResult<int>> UpdateAsync(int id, UpdateEmployeeModel emp)
+        //    if (!result.IsOK)
+        //        {
+        //            return result;
+        //        }
+        //    var update = await _employeeRepository.UpdateAsync(id, emp);
+
+        //    result.Result = update;
+        //    result.StatusCode = 200;
+        //    return result;
+        //    }
+
+        //Middleware
+
+        public async Task<int> UpdateAsync(int id, UpdateEmployeeModel emp)
         {
-            var result = new MethodResult<int>();
+            var errors = new List<string>();
 
             var validateErrors = EmployeeValidator.ValidateUpdate(emp);
-             foreach (var error in validateErrors)
-            {
-                result.AddError(error.ToString());
-            }
+            errors.AddRange(validateErrors.Select(e => e.ToString()));
+
             var exists = await _employeeRepository.GetByIdAsync(id);
             if (exists == null)
             {
-                result.AddError("EmployeeNotExisted", "Id", id);
+                errors.Add(EnumEmployeeValidationError.EmployeeNotExisted.ToString());
             }
             if (emp.DepartmentId.HasValue)
             {
                 var departmentCheck = await _departmentRepository.ExistAsync(emp.DepartmentId.Value);
                 if (!departmentCheck)
                 {
-                    result.AddError("DepartmentNotExisted", "DepartmentId", emp.DepartmentId);
+                    errors.Add(EnumEmployeeValidationError.DepartmentNotExist.ToString());
                 }
             }
-            if (!result.IsOK)
-                {
-                    return result;
-                }
-            var update = await _employeeRepository.UpdateAsync(id, emp);
-
-            result.Result = update;
-            result.StatusCode = 200;
-            return result;
-
+            if (errors.Any())
+            {
+                throw new ValidationException(errors);
             }
+            return await _employeeRepository.UpdateAsync(id, emp);
+        }
         public async Task<int> DeleteAsync(int id)
         {
             var exists = await _employeeRepository.GetByIdAsync(id);
             if (exists == null)
             {
-                throw new Exception(EnumEmployeeValidationError.EmployeeNotExisted.ToString());
+                throw new ValidationException(new List<string>
+                {
+                    EnumEmployeeValidationError.EmployeeNotExisted.ToString()
+                });
             }
             return await _employeeRepository.DeleteAsync(id);
         }
         public async Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year)
         {
+            if (year <= 2000)
+            {
+                throw new ValidationException(new List<string>
+                {
+                    "Year must be greater than 2000"
+                });
+            }
             return await _employeeRepository.GetNewHireMonthAsync(year);
         }
     }

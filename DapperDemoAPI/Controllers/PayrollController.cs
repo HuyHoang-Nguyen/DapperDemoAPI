@@ -1,5 +1,4 @@
 ﻿using DapperDemoAPI.IRepositories;
-using DapperDemoAPI.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DapperDemoAPI.Controllers
@@ -14,10 +13,16 @@ namespace DapperDemoAPI.Controllers
             _payrollRepository = payrollRepository;
         }
         [HttpPost]
-        public async Task<IActionResult> RunPayroll(int month, int year)
+        public async Task<IActionResult> RunPayroll([FromQuery] int month,[FromQuery] int year)
         {
-            var inserted = await _payrollRepository.InsertPayrollAsync(month, year);
-            return Ok(new { RowInserted = inserted});
+            var result = await _payrollRepository.InsertPayrollAsync(month, year);
+            return Ok(result);
+        }
+        [HttpGet("report")]
+        public async Task<IActionResult> GetReport([FromQuery] int month,[FromQuery] int year)
+        {
+            var result = await _payrollRepository.GetPayrollReportAsync(month, year);
+            return Ok(result);
         }
     }
 }

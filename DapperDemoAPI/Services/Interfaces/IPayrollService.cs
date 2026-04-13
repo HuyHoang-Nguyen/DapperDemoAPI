@@ -1,8 +1,8 @@
 ﻿using DapperDemoAPI.QueryModels;
 
-namespace DapperDemoAPI.IRepositories
+namespace DapperDemoAPI.Services.Interfaces
 {
-    public interface IPayrollRepository
+    public interface IPayrollService
     {
         Task<int> InsertPayrollAsync(int month, int year);
 
