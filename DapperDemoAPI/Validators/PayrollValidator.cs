@@ -1,4 +1,5 @@
-﻿using DapperDemoAPI.GlobalExceptionHandler;
+﻿using DapperDemoAPI.Enums.EnumError;
+using DapperDemoAPI.GlobalExceptionHandler;
 
 namespace DapperDemoAPI.Validators
 {
@@ -10,12 +11,12 @@ namespace DapperDemoAPI.Validators
 
             if (month < 1 || month > 12)
             {
-                errors.Add("Month must be between 1 and 12");
+                errors.Add(EnumPayrollValidatorError.MonthInvalid.ToString());
             }
 
             if (year <= 2000)
             {
-                errors.Add("Year must be greater than 2000");
+                errors.Add(EnumPayrollValidatorError.YearInvalid.ToString());
             }
 
             if (errors.Any())

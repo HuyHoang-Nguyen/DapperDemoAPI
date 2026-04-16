@@ -10,5 +10,9 @@
         public int DepartmentId { get; set; }
         public decimal BaseSalary { get; set; }
         public string? Status { get; set; }
+        public int page { get; set; } = 1;
+        public int pageSize { get; set; } = 10;
+        public string sortBy { get; set; } = "Id";
+        public string sortOrder { get; set; } = "asc";
     }
 }

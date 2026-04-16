@@ -1,5 +1,6 @@
 ﻿using DapperDemoAPI.Common.Results;
 using DapperDemoAPI.Entities;
+using DapperDemoAPI.Models;
 using DapperDemoAPI.Models.Employee;
 using DapperDemoAPI.QueryModels;
 
@@ -14,6 +15,7 @@ namespace DapperDemoAPI.Services.Interfaces
         Task<int> UpdateAsync(int id, UpdateEmployeeModel emp);
         Task<int> DeleteAsync(int id);
         Task<IEnumerable<NewHireQueryModel>> GetNewHireMonthAsync(int year);
+        Task<PagingResult<Employee>> SearchAsync(string? keyword, int? departmentId, decimal? minSalary, decimal? maxSalary, string? Status, int page, int pageSize, string sortBy, string sortDir);
     }
 }
 

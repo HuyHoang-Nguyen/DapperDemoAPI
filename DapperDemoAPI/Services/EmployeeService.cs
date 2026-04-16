@@ -3,6 +3,7 @@ using DapperDemoAPI.Entities;
 using DapperDemoAPI.Enums.EnumError;
 using DapperDemoAPI.GlobalExceptionHandler;
 using DapperDemoAPI.IRepositories;
+using DapperDemoAPI.Models;
 using DapperDemoAPI.Models.Employee;
 using DapperDemoAPI.QueryModels;
 using DapperDemoAPI.Services.Interfaces;
@@ -189,6 +190,10 @@ namespace DapperDemoAPI.Services
                 });
             }
             return await _employeeRepository.GetNewHireMonthAsync(year);
+        }
+        public async Task<PagingResult<Employee>> SearchAsync(string? keyword, int? departmentId, decimal? minSalary, decimal? maxSalary, string? Status, int page, int pageSize, string sortBy, string sortDir)
+        {
+            return await _employeeRepository.SearchAsync(keyword,departmentId, minSalary, maxSalary, Status, page, pageSize, sortBy, sortDir);
         }
     }
 }

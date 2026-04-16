@@ -73,5 +73,11 @@ namespace DapperDemoAPI.Controllers
             var result = await _employeeService.GetNewHireMonthAsync(year);
             return Ok(result);
         }
+        [HttpGet("search")]
+        public async Task<IActionResult> Search(string? keyword, int? departmentId, decimal? minSalary, decimal? maxSalary, string? Status, int page , int pageSize, string sortBy, string sortDir)
+        {
+            var result = await _employeeService.SearchAsync(keyword, departmentId, minSalary, maxSalary, Status, page, pageSize, sortBy , sortDir);
+            return Ok(result);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DapperDemoAPI.GlobalExceptionHandler;
+﻿using DapperDemoAPI.Enums.EnumError;
+using DapperDemoAPI.GlobalExceptionHandler;
 using DapperDemoAPI.IRepositories;
 using DapperDemoAPI.QueryModels;
 using DapperDemoAPI.Services.Interfaces;
@@ -27,7 +28,7 @@ namespace DapperDemoAPI.Services
             {
                 throw new ValidationException(new List<string>
                 {
-                    "No data"
+                    EnumPayrollValidatorError.DataNotFound.ToString()
                 });
             }
             return result;

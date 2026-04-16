@@ -25,7 +25,7 @@ namespace DapperDemoAPI.Validators.Employees
                 {
                     errors.Add(EnumEmployeeValidationError.PhoneInvalid);
                 }
-                if (hireDate.HasValue && hireDate.Value >= DateOnly.FromDateTime(DateTime.Today))
+                if (hireDate.HasValue && hireDate.Value >= DateOnly.FromDateTime(DateTime.Today) || hireDate.HasValue && hireDate.Value.Year < 2000)
                 {
                     errors.Add(EnumEmployeeValidationError.HireDateInvalid);
                 }
